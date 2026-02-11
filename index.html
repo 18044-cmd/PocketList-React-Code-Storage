@@ -239,14 +239,22 @@ const listComparisonData = activeLists.map(
 };
 
 function showCode(section) {
+  const codeElement = document.getElementById("codeDisplay");
+
+  // Update title
   document.getElementById("fileTitle").textContent =
     codes[section].title;
 
-  const codeElement = document.getElementById("codeDisplay");
+  // Remove previous highlighting
+  codeElement.classList.remove("hljs");
+
+  // Set new code
   codeElement.textContent = codes[section].content;
 
-  hljs.highlightAll(); // Properly re-highlight every time
+  // Re-highlight properly
+  hljs.highlightElement(codeElement);
 }
+
 </script>
 
 </body>
