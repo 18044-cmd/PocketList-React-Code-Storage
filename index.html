@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pocket List – Code Compiler Viewer</title>
+<title>Pocket List - Plan & Shop</title>
 
 <!-- Highlight.js Theme -->
 <link rel="stylesheet"
@@ -30,27 +30,18 @@ body {
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 30px;
 }
 
-.header-left h1 {
+.header h1 {
   margin: 0;
   font-size: 32px;
 }
 
-.header-left p {
+.header p {
   margin-top: 6px;
   color: #64748b;
-}
-
-/* Logos */
-.logos img {
-  height: 40px;
-  margin-left: 10px;
-  border-radius: 8px;
+  font-size: 15px;
 }
 
 /* Grid Layout */
@@ -84,6 +75,7 @@ body {
   background: #e2e8f0;
   cursor: pointer;
   font-weight: 500;
+  transition: 0.2s ease;
 }
 
 .sidebar button:hover {
@@ -126,16 +118,8 @@ pre {
 <div class="wrapper">
 
   <div class="header">
-    <div class="header-left">
-      <h1>⚙️ Pocket List - Plan & Shop</h1>
-      <p>Penjelasan Logic Esensial Pemrograman</p>
-    </div>
-
-    <!-- 🔥 EDIT THESE IMAGE LINKS -->
-    <div class="logos">
-      <img src="https://your-logo-link-1.png">
-      <img src="https://your-logo-link-2.png">
-    </div>
+    <h1>⚙️ Pocket List - Plan & Shop</h1>
+    <p>Penjelasan Logic Esensial Pemrograman</p>
   </div>
 
   <div class="grid">
@@ -171,13 +155,13 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 // useState stores user input
 const [listName, setListName] = useState('');
 
-// Fetch data from backend
+// Fetch shopping lists from backend
 const { data: lists = [] } = useQuery({
   queryKey: ['shoppingLists'],
   queryFn: () => base44.entities.ShoppingList.list()
 });
 
-// Create new list
+// Create new list using mutation
 const createListMutation = useMutation({
   mutationFn: (name) =>
     base44.entities.ShoppingList.create({
@@ -186,7 +170,8 @@ const createListMutation = useMutation({
     })
 });
 
-// JSX gets compiled into JavaScript by Babel
+// JSX below will be compiled by Babel
+// into React.createElement() calls.
 `
 },
 
@@ -201,7 +186,10 @@ const getListStats = (listId) => {
   );
 
   return {
-    itemCount: listItems.length,
+    itemCount: listItems.reduce(
+      (sum, item) => sum + (item.quantity || 1),
+      0
+    ),
 
     pickedCount: listItems.filter(
       item => item.is_picked
@@ -257,7 +245,7 @@ function showCode(section) {
   const codeElement = document.getElementById("codeDisplay");
   codeElement.textContent = codes[section].content;
 
-  hljs.highlightElement(codeElement);
+  hljs.highlightAll(); // Properly re-highlight every time
 }
 </script>
 
