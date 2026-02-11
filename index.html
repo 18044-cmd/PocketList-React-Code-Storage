@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pocket List – Code Compiler Viewer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>⚙️ Pocket List</h1>
+    <p>React Code Explanation & Compiler View</p>
+  </header>
+
+  <div class="container">
+
+    <div class="sidebar">
+      <button onclick="showCode('home')">Home.jsx</button>
+      <button onclick="showCode('lists')">Lists.jsx</button>
+      <button onclick="showCode('dashboard')">Dashboard.jsx</button>
+    </div>
+
+    <div class="code-area">
+      <pre id="codeDisplay">
+// Select a file to view explanation
+      </pre>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
