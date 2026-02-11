@@ -3,168 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pocket List – Code Viewer</title>
+<title>Pocket List – Code Compiler Viewer</title>
 
 <style>
+/* ===== Global ===== */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: #f1f5f9;
   background-image: linear-gradient(#e2e8f0 1px, transparent 1px),
                     linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
   background-size: 40px 40px;
+  color: #0f172a;
 }
 
-/* App Container */
-.app {
-  max-width: 420px;
+/* ===== Layout ===== */
+.wrapper {
+  max-width: 1200px;
   margin: auto;
-  min-height: 100vh;
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(6px);
-  padding-bottom: 80px;
+  padding: 40px 20px 80px 20px;
 }
 
-/* Header */
+/* ===== Header ===== */
 .header {
-  padding: 20px;
+  margin-bottom: 30px;
 }
 
-.title {
-  font-size: 22px;
-  font-weight: bold;
-  color: #0f172a;
+.header h1 {
+  margin: 0;
+  font-size: 32px;
 }
 
-.subtitle {
+.header p {
+  margin-top: 6px;
   color: #64748b;
-  font-size: 14px;
 }
 
-/* Section Title */
-.section-title {
-  font-size: 22px;
-  font-weight: bold;
-  padding: 0 20px;
-  margin-top: 10px;
-  color: #0f172a;
+/* ===== Main Grid ===== */
+.grid {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 25px;
 }
 
-/* Card */
-.card {
+/* ===== Sidebar ===== */
+.sidebar {
   background: white;
-  margin: 15px 20px;
-  padding: 18px;
+  padding: 20px;
   border-radius: 18px;
   box-shadow: 0 6px 15px rgba(0,0,0,0.05);
 }
 
-/* Buttons */
-.button {
-  background: #3b82f6;
-  border: none;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 25px;
-  cursor: pointer;
-  margin-right: 10px;
+.sidebar h3 {
+  margin-top: 0;
+  font-size: 16px;
+  margin-bottom: 15px;
+  color: #64748b;
 }
 
-.button:hover {
-  background: #2563eb;
+.sidebar button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  border: none;
+  background: #e2e8f0;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.sidebar button:hover {
+  background: #3b82f6;
+  color: white;
+}
+
+/* ===== Code Panel ===== */
+.panel {
+  background: white;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+}
+
+.panel h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
 }
 
 /* Code Area */
 .code {
   background: #0f172a;
   color: #e2e8f0;
-  border-radius: 15px;
-  padding: 15px;
-  font-size: 13px;
+  padding: 20px;
+  border-radius: 14px;
+  font-size: 14px;
   overflow-x: auto;
   white-space: pre-wrap;
-  margin-top: 10px;
+  line-height: 1.5;
 }
 
-/* Bottom Nav */
-.nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-width: 420px;
-  margin: auto;
-  background: white;
-  border-top: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: space-around;
-  padding: 12px 0;
-}
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 
-.nav button {
-  background: none;
-  border: none;
-  color: #64748b;
-  font-size: 14px;
-  cursor: pointer;
-}
+  .sidebar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
 
-.nav button.active {
-  color: #3b82f6;
-  font-weight: bold;
+  .sidebar button {
+    flex: 1;
+    margin-bottom: 0;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="wrapper">
 
   <div class="header">
-    <div class="title">⚙️ Pocket List</div>
-    <div class="subtitle">React Code Explanation Viewer</div>
+    <h1>⚙️ Pocket List</h1>
+    <p>React Code Explanation & Compiler Viewer</p>
   </div>
 
-  <div class="section-title">
-    Explain Your Code Clearly
-  </div>
+  <div class="grid">
 
-  <div class="card">
-    <button class="button" onclick="showCode('home')">Home.jsx</button>
-    <button class="button" onclick="showCode('lists')">Lists.jsx</button>
-    <button class="button" onclick="showCode('dashboard')">Dashboard.jsx</button>
-
-    <div id="codeDisplay" class="code">
-Select a file to view explanation...
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>Select File</h3>
+      <button onclick="showCode('home')">Home.jsx</button>
+      <button onclick="showCode('lists')">Lists.jsx</button>
+      <button onclick="showCode('dashboard')">Dashboard.jsx</button>
     </div>
+
+    <!-- Code Panel -->
+    <div class="panel">
+      <h2 id="fileTitle">Select a file</h2>
+      <div id="codeDisplay" class="code">
+Click a file on the left to view code explanation.
+      </div>
+    </div>
+
   </div>
 
-</div>
-
-<div class="nav">
-  <button class="active">Compiler</button>
-  <button>Explain</button>
-  <button>About</button>
 </div>
 
 <script>
 const codes = {
 
-home: `// Home.jsx
+home: {
+title: "Home.jsx",
+content: `// Home.jsx
 
 // Import React and hooks
 import React, { useState } from 'react';
 
-// useState is used to store user input
+// useState stores the list input value
 const [listName, setListName] = useState('');
 
-// useQuery fetches data from base44 backend
+// Fetch shopping lists using React Query
 const { data: lists = [] } = useQuery({
   queryKey: ['shoppingLists'],   // cache key
   queryFn: () => base44.entities.ShoppingList.list()
 });
 
-// useMutation is used to create new list
+// Create new list using mutation
 const createListMutation = useMutation({
   mutationFn: (name) =>
     base44.entities.ShoppingList.create({
@@ -173,51 +181,62 @@ const createListMutation = useMutation({
     })
 });
 
-// JSX below will be compiled by Babel
+// JSX returned below will be compiled by Babel
 // into React.createElement() calls.
-`,
+`
+},
 
-lists: `// Lists.jsx
+lists: {
+title: "Lists.jsx",
+content: `// Lists.jsx
 
-// Get all lists and items
+// Fetch all lists and list items
 const { data: lists = [] } = useQuery(...);
 const { data: allItems = [] } = useQuery(...);
 
-// Calculate statistics per list
+// Calculate statistics for each list
 const getListStats = (listId) => {
 
-  // Filter items belonging to this list
+  // Filter items that belong to this list
   const listItems = allItems.filter(
     item => item.list_id === listId
   );
 
   return {
-    // Total quantity
-    itemCount: listItems.length,
+    // Count total quantity
+    itemCount: listItems.reduce(
+      (sum, item) => sum + (item.quantity || 1),
+      0
+    ),
 
-    // Picked items
+    // Count picked items
     pickedCount: listItems.filter(
       item => item.is_picked
     ).length,
 
-    // Estimated total cost
+    // Calculate estimated total cost
     estimatedTotal: listItems.reduce(
       (sum, item) =>
-        sum + (item.estimated_price || 0),
+        sum + (item.estimated_price || 0) *
+        (item.quantity || 1),
       0
     )
   };
 };
-`,
+`
+},
 
-dashboard: `// Dashboard.jsx
+dashboard: {
+title: "Dashboard.jsx",
+content: `// Dashboard.jsx
 
-// Calculate overall statistics
+// Calculate total number of items
 const totalItemCount = allItems.reduce(
   (sum, item) => sum + (item.quantity || 1),
   0
 );
 
+// Calculate total estimated spending
 const totalEstimated = allItems.reduce(
   (sum, item) =>
     sum + ((item.estimated_price || 0) *
@@ -225,7 +244,7 @@ const totalEstimated = allItems.reduce(
   0
 );
 
-// Prepare chart data
+// Prepare comparison data for Recharts
 const listComparisonData = activeLists.map(
   list => {
 
@@ -240,11 +259,15 @@ const listComparisonData = activeLists.map(
     };
 });
 `
+}
 };
 
 function showCode(section) {
+  document.getElementById("fileTitle").textContent =
+    codes[section].title;
+
   document.getElementById("codeDisplay").textContent =
-    codes[section];
+    codes[section].content;
 }
 </script>
 
