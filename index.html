@@ -1,33 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Pocket List – Code Compiler Viewer</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pocket List – Code Viewer</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f1f5f9;
+  background-image: linear-gradient(#e2e8f0 1px, transparent 1px),
+                    linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* App Container */
+.app {
+  max-width: 420px;
+  margin: auto;
+  min-height: 100vh;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(6px);
+  padding-bottom: 80px;
+}
+
+/* Header */
+.header {
+  padding: 20px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #0f172a;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* Section Title */
+.section-title {
+  font-size: 22px;
+  font-weight: bold;
+  padding: 0 20px;
+  margin-top: 10px;
+  color: #0f172a;
+}
+
+/* Card */
+.card {
+  background: white;
+  margin: 15px 20px;
+  padding: 18px;
+  border-radius: 18px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+}
+
+/* Buttons */
+.button {
+  background: #3b82f6;
+  border: none;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 25px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.button:hover {
+  background: #2563eb;
+}
+
+/* Code Area */
+.code {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: 15px;
+  padding: 15px;
+  font-size: 13px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  margin-top: 10px;
+}
+
+/* Bottom Nav */
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 420px;
+  margin: auto;
+  background: white;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+}
+
+.nav button {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.nav button.active {
+  color: #3b82f6;
+  font-weight: bold;
+}
+</style>
 </head>
+
 <body>
 
-  <header>
-    <h1>⚙️ Pocket List</h1>
-    <p>React Code Explanation & Compiler View</p>
-  </header>
+<div class="app">
 
-  <div class="container">
-
-    <div class="sidebar">
-      <button onclick="showCode('home')">Home.jsx</button>
-      <button onclick="showCode('lists')">Lists.jsx</button>
-      <button onclick="showCode('dashboard')">Dashboard.jsx</button>
-    </div>
-
-    <div class="code-area">
-      <pre id="codeDisplay">
-// Select a file to view explanation
-      </pre>
-    </div>
-
+  <div class="header">
+    <div class="title">⚙️ Pocket List</div>
+    <div class="subtitle">React Code Explanation Viewer</div>
   </div>
 
-  <script src="script.js"></script>
+  <div class="section-title">
+    Explain Your Code Clearly
+  </div>
+
+  <div class="card">
+    <button class="button" onclick="showCode('home')">Home.jsx</button>
+    <button class="button" onclick="showCode('lists')">Lists.jsx</button>
+    <button class="button" onclick="showCode('dashboard')">Dashboard.jsx</button>
+
+    <div id="codeDisplay" class="code">
+Select a file to view explanation...
+    </div>
+  </div>
+
+</div>
+
+<div class="nav">
+  <button class="active">Compiler</button>
+  <button>Explain</button>
+  <button>About</button>
+</div>
+
+<script>
+const codes = {
+
+home: `// Home.jsx
+
+// Import React and hooks
+import React, { useState } from 'react';
+
+// useState is used to store user input
+const [listName, setListName] = useState('');
+
+// useQuery fetches data from base44 backend
+const { data: lists = [] } = useQuery({
+  queryKey: ['shoppingLists'],   // cache key
+  queryFn: () => base44.entities.ShoppingList.list()
+});
+
+// useMutation is used to create new list
+const createListMutation = useMutation({
+  mutationFn: (name) =>
+    base44.entities.ShoppingList.create({
+      name,
+      status: 'active'
+    })
+});
+
+// JSX below will be compiled by Babel
+// into React.createElement() calls.
+`,
+
+lists: `// Lists.jsx
+
+// Get all lists and items
+const { data: lists = [] } = useQuery(...);
+const { data: allItems = [] } = useQuery(...);
+
+// Calculate statistics per list
+const getListStats = (listId) => {
+
+  // Filter items belonging to this list
+  const listItems = allItems.filter(
+    item => item.list_id === listId
+  );
+
+  return {
+    // Total quantity
+    itemCount: listItems.length,
+
+    // Picked items
+    pickedCount: listItems.filter(
+      item => item.is_picked
+    ).length,
+
+    // Estimated total cost
+    estimatedTotal: listItems.reduce(
+      (sum, item) =>
+        sum + (item.estimated_price || 0),
+      0
+    )
+  };
+};
+`,
+
+dashboard: `// Dashboard.jsx
+
+// Calculate overall statistics
+const totalItemCount = allItems.reduce(
+  (sum, item) => sum + (item.quantity || 1),
+  0
+);
+
+const totalEstimated = allItems.reduce(
+  (sum, item) =>
+    sum + ((item.estimated_price || 0) *
+           (item.quantity || 1)),
+  0
+);
+
+// Prepare chart data
+const listComparisonData = activeLists.map(
+  list => {
+
+    const listItems = allItems.filter(
+      item => item.list_id === list.id
+    );
+
+    return {
+      name: list.name,
+      estimated: ...,
+      budget: list.budget || 0
+    };
+});
+`
+};
+
+function showCode(section) {
+  document.getElementById("codeDisplay").textContent =
+    codes[section];
+}
+</script>
+
 </body>
 </html>
